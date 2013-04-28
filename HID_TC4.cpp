@@ -72,8 +72,8 @@ extern const u8 _hidReportDescriptor[] PROGMEM;
 //
 //   flat   = 0
 //   fuzz   = 0
-//   offset = -27315
-//   scale  = 100
+//   offset = -2732
+//   scale  = 10
 
 const u8 _hidReportDescriptor[] = {
     0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)
