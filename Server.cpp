@@ -136,19 +136,19 @@ static const command_table_t command_table[] = {
 static void version_action(Server *server, char **tokens, uint8_t count)
 {
     static PROGMEM prog_char text[] = "+OK TC4Server " VERSION_MAJOR "." VERSION_MINOR
-	" built " __DATE__ " at " __TIME__
+	" built " __DATE__ " at " __TIME__ " for "
 #if defined(__AVR_ATmega168__)
-	" and running on an ATmega168"
+	"ATmega 168"
 #elif defined(__AVR_ATmega328P__)
-	" and running on an ATmega 328P"
+	"ATmega 328P"
 #elif defined(__AVR_ATmega1280__)
-	" and running on an ATmega 1280"
+	"ATmega 1280"
 #elif defined(__AVR_ATmega2560__)
-	" and running on an ATmega 2560"
+	"ATmega 2560"
 #elif defined(__AVR_ATmega32U4__)
-	" and running on an ATmega 32U4"
+	"ATmega 32U4"
 #elif defined(__SAM3X8E__)
-	" and running on an AT91SAM3X8E"
+	"AT91SAM3X8E"
 #endif
 	"\r\n";
     write_pgmspace(text);
@@ -278,12 +278,12 @@ static void ports_action(Server *server, char **tokens, uint8_t count)
 	{
 	    if ( ports & mask )
 	    {
-		Serial.print(" ");
+		write_pgmspace(space_text);
 		Serial.print(i);
 	    }
 	    mask <<= 1;
 	}
-	Serial.println("");
+	Serial.println();
     }
     else
     {
