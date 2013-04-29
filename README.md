@@ -24,17 +24,17 @@ To use the sketch, a TC4 Shield Version 5.30,
 	http://code.google.com/p/tc4-shield/
 
 is required.  Later versions of the TC4 Shield may also work.  This sketch has
-been written for and tested on the Arduino Duemilanove (AVR ATmega 328p) and
-Arduino Leonardo (AVR ATmega 32u4), but should work with any Arduino or Arduino
-clone compatible with the TC4 Shield and around 28K of program space for USB HID
-support and only 20K without.
+been written for and tested on the Arduino Duemilanove (ATmega 328p) and
+Arduino Leonardo (ATmega 32u4), but should work with any Arduino or Arduino
+clone compatible with the TC4 Shield and around 28K of program space for USB
+HID support and only 20K without.
 
 The command / response protocol is spoken over the Arduino's Serial interface
-which is, in the case of Duemilanove and Leonardo's, their USB interface.
+which is, in the case of the Duemilanove and Leonardo, their USB interface.
 
 The TC4Server allows up to four thermocouples and four thermistors to be
-queried for their current temperature in degrees Celcius via a "GET" command.
-The recognized sensor "ports" are
+queried for their current temperature in degrees Celcius via a GET command.
+The recognized sensor ports are
 
 |  Port  |  Device
 | -----: | :-----
@@ -44,20 +44,20 @@ The recognized sensor "ports" are
 
 Additionally,
 
-1. The "PWM" command sets a PWM duty cycle for the TC4's IO3 port which is tied
+1. The PWM command sets a PWM duty cycle for the TC4's IO3 port which is tied
    to the Arduino's digital pin 3 (ATmega 168 & 328's PD3 / PCINT19 / INT1;
    ATmega 32U4's PD0 / OC0B / SCL / INT0).  Duty cycles set are any floating
    point value between 0 and 100 corresponding to 0% - 100%.  Presently, the
    value is converted to an integer between 0 and 255 as per the requirements
    of the Arduino libraries.
 
-2. The "SSR" command controls the TC4's OT1 and OT2 outputs which are suitable
+2. The SSR command controls the TC4's OT1 and OT2 outputs which are suitable
    for driving a SSR.  These outputs are tied to the Arduino's digital pins 9
    and 10  (ATmega 168 & 328's PB1/OC1A/PCINT1 and PB2/SS/OC1B/PCINT2;
    ATmega 32U4's PB5 / PCINT5 / OC1A / !OC4B / ADC12 and PB6 / PCINT6 / OC1B /
    OC4B / ADC13).
 
-3. The "HELP" or "?" command displays help text.
+3. The HELP or ? command displays help text.
 
 On startup, the TC4Server sets all PWM duty cycles to 0% and SSR ports to 0 (off).
 Additionally, configuration settings for the thermistors and USB HID settings
@@ -81,7 +81,7 @@ send the HELP command to receive detailed help on the available commands.
 Temperature information may be obtained in one of two ways from the TC4Server:
 by connecting to it over its serial interface and sending commands and
 reading the responses, or by passively receiving USB HID reports from a
-TC4Server built with USB HID support and running on an Arduino which supports
+TC4Server built with USB HID support and run on an Arduino which supports
 the USB HID interface.  Both methods may be used concurrently.
 
 When sending commands to the TC4Server over the serial interface, the 
@@ -106,8 +106,8 @@ periodically read in the sequence 0, 1, 2, ..., 8.  After a sensor read has
 completed, a USB HID report is sent if it has been at least T milliseconds
 since the last report.  By default, T is 5000 ms (5 seconds).  The REPORT
 command changes the reporting period to any value from 500 ms to 65535 ms
-in units of milliseconds.  In this case, the GET command returns the last
-sampled value for the requested port.
+in units of milliseconds.  When built with USB HID support, the GET command
+returns the last sampled value for the requested port.
 
 The PORTS command specifies which ports to sample.  Port 0 is always sampled
 and thus may not be controlled via the PORTS command.  The ports are always
@@ -115,12 +115,12 @@ sampled in ascending numerical order regardless of the order they might
 be specified with the PORTS command.
 
 For usages in which the TC4Server will be used primarily as a USB HID
-device, you should configure the TC4Server by connect to it via the serial
-interface and issuing PORTS, REPORT, and THERMISTOR commands to set any
-configuration settings.  Those settings will automatically be saved in the
+device, you should configure the TC4Server by connecting to it via the serial
+interface and issuing PORTS, REPORT and THERMISTOR commands to set any desired
+configuration settings.  Settings so made will automatically be saved in the
 AVR's EEPROM and used to configure the device each time it is powered up or
 restarted.  Once the TC4Server is configured, you can then ignore the serial
-command interface an work solely with the temperature measurements reported
+command interface and work solely with the temperature measurements reported
 over the USB HID interface.
 
 
@@ -154,7 +154,7 @@ formulae,
 The range of Joystick positions is 0 to 65535 which corresponds to a
 temperature range of -273.2 C to 6280.3 C.  By default an offset of 273.2 and
 scale factor of 10 is used.  These values may be changed via the REPORT command
-described in Section 5.
+described in Section 6.
 
 
 5. Using a TC4 Shield with a Leonardo
@@ -213,9 +213,16 @@ PWM [port-number duty-cycle [...]]
   sets the duty cycle to 0 on all PWM ports.
 
 REPORT [period offset scale]  _USB HID capable devices only_   
-  Specify the minimum period in milliseconds between USB HID reports as well  as an offset and scale for transforming a floating point temperature in  degrees Celsius to a signed 16 bit integer HID report value in the range  0 to 65535,	report value = ( temperature + offset ) * scale
-  "period" and "scale" must be integers; "offset" need not be.
-  Issuing this command with no parameter displays the current settings.  Settings made with this command are saved in EEPROM.
+  Specify the minimum period in milliseconds between USB HID reports as well
+  as an offset and scale for transforming a floating point temperature in
+  degrees Celsius to a signed 16 bit integer HID report value in the range
+  0 to 65535,  
+  
+    report value = ( temperature + offset ) * scale
+    
+ "period" and "scale" must be integers; "offset" need not be.
+ Issuing this command with no parameter displays the current settings.
+ Settings made with this command are saved in EEPROM.
 
 RESET ["FACTORY"]  
   Perform an immediate software reset.  When the optional parameter "FACTORY"
