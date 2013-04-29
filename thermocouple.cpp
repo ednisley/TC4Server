@@ -1,4 +1,10 @@
 // Thermocouple library per ITS-90
+//
+// Thermocouple coefficients and some comments below are from the
+// NIST ITS-90 Thermocouple Database,
+//
+//   http://srdata.nist.gov/its90/main/
+//
 // Version:  20110615
 
 // *** BSD License ***
@@ -112,10 +118,36 @@ FLOAT tcLinear::absMV_C( FLOAT C ) { return C * slope; }
 
 // ------------------------------------- Type K
 
+//  This section contains coefficients of approximate inverse 
+//  functions for type K thermocouples for the subranges of 
+//  temperature and voltage listed below. The range of errors of 
+//  the approximate inverse function for each subrange is also given. 
+//  The coefficients are in units of C and mV and are listed in 
+//  the order of constant term up to the highest order.
+//  The equation is of the form
+//
+//      t_90 = d_0 + d_1*E + d_2*E^2 + ... + d_n*E^n,
+//
+//  where E is in mV and t_90 is in C.
+//
+//   Temperature        Voltage            Error 
+//     range              range            range
+//      (C)               (mV)             (C)
+//   -200. to 0.      -5.891 to 0.000    -0.02 to 0.04
+//      0. to 500.     0.000 to 20.644   -0.05 to 0.04
+//    500. to 1372.   20.644 to 54.886   -0.05 to 0.06
+// ********************************************************
+//
+// Temperature  -200.           0.           500.
+// Range:          0.         500.          1372.
+//
+// Voltage    -5.891         0.000         20.644
+// Range:      0.000        20.644         54.886
+
 // coefficients for inverse lookup (given mV, find C)
 PFLOAT typeK::coeff_inv[10][3] = {
-         { 0.0000000E+00,  0.000000E+00, -1.318058E+02 },
-         { 2.5173462E+01,  2.508355E+01,  4.830222E+01 }, 
+         {  0.0000000E+00,  0.000000E+00, -1.318058E+02 },
+         {  2.5173462E+01,  2.508355E+01,  4.830222E+01 }, 
          { -1.1662878E+00,  7.860106E-02, -1.646031E+00 },
          { -1.0833638E+00, -2.503131E-01,  5.464731E-02 },
          { -8.9773540E-01,  8.315270E-02, -9.650715E-04 },
@@ -123,16 +155,32 @@ PFLOAT typeK::coeff_inv[10][3] = {
          { -8.6632643E-02,  9.804036E-04, -3.110810E-08 },
          { -1.0450598E-02, -4.413030E-05,  0.000000E+00 },
          { -5.1920577E-04,  1.057734E-06,  0.000000E+00 },
-         { 0.0000000E+00, -1.052755E-08,  0.000000E+00 }
+         {  0.0000000E+00, -1.052755E-08,  0.000000E+00 }
 };
 
 // mV ranges for inverse lookup coefficients
 PFLOAT typeK::range_inv[2][3] = {
-  { -5.891,          0.000,         20.644  },
-  {  0.000,         20.644,         54.886  }
+  { -5.891,          0.000,         20.644  }, // -200 C,   0 C,  500 C
+  {  0.000,         20.644,         54.886  }  //    0 C, 500 C, 1372 C
 };
 
 // coefficients for direct lookup (given C, find mV)
+//
+//  This section contains coefficients for type K thermocouples for
+//  the two subranges of temperature listed below.  The coefficients 
+//  are in units of C and mV and are listed in the order of constant 
+//  term up to the highest order.  The equation below 0 C is of the form
+//
+//    E = sum(i=0 to n) c_i t^i.
+//
+// The equation above 0 C is of the form 
+//
+//    E = sum(i=0 to n) c_i t^i + a0 exp(a1 (t - a2)^2).
+//
+//    Temperature Range (C)
+//       -270.000 to    0.000 
+//          0.000 to 1372.000
+
 PFLOAT typeK::coeff_dir[11][2] = {
          {  0.000000000000E+00, -0.176004136860E-01 },
          {  0.394501280250E-01,  0.389212049750E-01 },
